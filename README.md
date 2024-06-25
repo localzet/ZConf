@@ -10,15 +10,11 @@ Zorin Configuration Language (ZCONF) Utils
 
 PHP парсер для ZCONF, совместимый с [TOML v0.4.0](https://github.com/toml-lang/toml/releases/tag/v0.4.0).
 
-[![Статус сборки](https://travis-ci.org/localzet/zconf.png?branch=master)](https://travis-ci.org/localzet/zconf)
-[![Последняя версия](https://poser.pugx.org/localzet/zconf/v/stable.png)](https://packagist.org/packages/localzet/zconf)
-[![Всего загрузок](https://poser.pugx.org/localzet/zconf/downloads.png)](https://packagist.org/packages/localzet/zconf)
-
 [![Коммиты](https://img.shields.io/github/commit-activity/t/localzet/zconf?label=%D0%9A%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%8B)](https://github.com/localzet/zconf)
 [![Версия](https://img.shields.io/packagist/v/localzet/zconf?label=%D0%92%D0%B5%D1%80%D1%81%D0%B8%D1%8F)](https://packagist.org/packages/localzet/zconf)
 [![Версия PHP](https://img.shields.io/packagist/dependency-v/localzet/zconf?label=PHP)](https://packagist.org/packages/localzet/zconf)
 [![Скачивания](https://img.shields.io/packagist/dt/localzet/zconf?label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F)](https://packagist.org/packages/localzet/zconf)
-[![Скачивания](https://img.shields.io/github/license/localzet/zconf?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F)](https://github.com/localzet/zconf)
+[![Лицензия](https://img.shields.io/github/license/localzet/zconf?label=%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F)](https://github.com/localzet/zconf)
 
 Установка
 ------------

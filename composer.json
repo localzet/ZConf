@@ -1,0 +1,32 @@
+{
+  "name": "localzet/zconf",
+  "description": "Zorin Configuration Language Utils",
+  "type": "library",
+  "keywords": [
+    "zconf",
+    "parser"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "role": "Developer",
+      "name": "Ivan Zorin",
+      "email": "creator@localzet.com",
+      "homepage": "https://github.com/localzet"
+    }
+  ],
+  "support": {
+    "email": "support@localzet.com",
+    "issues": "https://github.com/localzet/zconf/issues",
+    "source": "https://github.com/localzet/zconf"
+  },
+  "require": {
+    "php": ">=7.1",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ZCONF\\": "src/"
+    }
+  }
+}

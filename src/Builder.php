@@ -37,7 +37,7 @@ use function str_replace;
  */
 class Builder
 {
-    protected $prefix = '';
+    protected $prefix = '    '; // 4 пробела по умолчанию
     protected $output = '';
     protected $currentKey;
     /** @var ZStore */

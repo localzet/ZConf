@@ -334,6 +334,7 @@ class Parser
      */
     private function parseNull(ZStream $stream)
     {
+        $stream->moveNext();
         return null;
     }
 

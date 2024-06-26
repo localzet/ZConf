@@ -37,9 +37,9 @@ class Parser
     /** @var ZLexer Лексер */
     protected $lexer;
     /** @var ZStore Хранилище ключей */
-    private $keyStore;
-    /** @var ZArray Массив TOML */
-    private $tomlArray;
+    private $ZStore;
+    /** @var ZArray Массив */
+    private $ZArray;
 
     private static $tokensNotAllowedInBasicStrings = [
         'T_ESCAPE',
@@ -121,7 +121,7 @@ class Parser
     public function parse(string $input, bool $resultAsObject = false)
     {
         if (preg_match('//u', $input) === false) {
-            throw new SyntaxException('Входные данные TOML, похоже, не являются действительными UTF-8.');
+            throw new SyntaxException('Входные данные, похоже, не являются действительными UTF-8.');
         }
 
         $input = str_replace(["\r\n", "\r"], "\n", $input);
@@ -157,14 +157,14 @@ class Parser
      */
     protected function parseImplementation(ZStream $stream): array
     {
-        $this->keyStore = new ZStore();
-        $this->tomlArray = new ZArray();
+        $this->ZStore = new ZStore();
+        $this->ZArray = new ZArray();
 
         while ($stream->hasPendingTokens()) {
             $this->processExpression($stream);
         }
 
-        return $this->tomlArray->getArray();
+        return $this->ZArray->getArray();
     }
 
     /**
@@ -222,25 +222,25 @@ class Parser
         $isInlineTable = $stream->isNext('T_LEFT_CURLY_BRACE');
 
         if ($isInlineTable) {
-            if (!$this->keyStore->isValidInlineTable($keyName)) {
+            if (!$this->ZStore->isValidInlineTable($keyName)) {
                 $this->syntaxError("Ключ встроенной таблицы \"{$keyName}\" уже был определен ранее.");
             }
 
-            $this->keyStore->addInlineTableKey($keyName);
+            $this->ZStore->addInlineTableKey($keyName);
         } else {
-            if (!$this->keyStore->isValidKey($keyName)) {
+            if (!$this->ZStore->isValidKey($keyName)) {
                 $this->syntaxError("Ключ \"{$keyName}\" уже был определен ранее.");
             }
 
-            $this->keyStore->addKey($keyName);
+            $this->ZStore->addKey($keyName);
         }
 
         if ($stream->isNext('T_LEFT_SQUARE_BRAKET')) {
-            $this->tomlArray->addKeyValue($keyName, $this->parseArray($stream));
+            $this->ZArray->addKeyValue($keyName, $this->parseArray($stream));
         } elseif ($isInlineTable) {
             $this->parseInlineTable($stream, $keyName);
         } else {
-            $this->tomlArray->addKeyValue($keyName, $this->parseSimpleValue($stream)->value);
+            $this->ZArray->addKeyValue($keyName, $this->parseSimpleValue($stream)->value);
         }
 
         if (!$isFromInlineTable) {
@@ -665,7 +665,7 @@ class Parser
     {
         $this->matchNext('T_LEFT_CURLY_BRACE', $stream);
 
-        $this->tomlArray->beginInlineTableKey($keyName);
+        $this->ZArray->beginInlineTableKey($keyName);
 
         $this->parseSpaceIfExists($stream);
 
@@ -684,7 +684,7 @@ class Parser
 
         $this->matchNext('T_RIGHT_CURLY_BRACE', $stream);
 
-        $this->tomlArray->endCurrentInlineTableKey();
+        $this->ZArray->endCurrentInlineTableKey();
     }
 
     /**
@@ -696,21 +696,21 @@ class Parser
     {
         $this->matchNext('T_LEFT_SQUARE_BRAKET', $stream);
 
-        $fullTableName = $this->tomlArray->escapeKey($key = $this->parseKeyName($stream));
+        $fullTableName = $this->ZArray->escapeKey($key = $this->parseKeyName($stream));
 
         while ($stream->isNext('T_DOT')) {
             $stream->moveNext();
 
-            $key = $this->tomlArray->escapeKey($this->parseKeyName($stream));
+            $key = $this->ZArray->escapeKey($this->parseKeyName($stream));
             $fullTableName .= ".$key";
         }
 
-        if (!$this->keyStore->isValidTableKey($fullTableName)) {
+        if (!$this->ZStore->isValidTableKey($fullTableName)) {
             $this->syntaxError("Ключ \"{$fullTableName}\" уже был определен ранее.");
         }
 
-        $this->keyStore->addTableKey($fullTableName);
-        $this->tomlArray->addTableKey($fullTableName);
+        $this->ZStore->addTableKey($fullTableName);
+        $this->ZArray->addTableKey($fullTableName);
         $this->matchNext('T_RIGHT_SQUARE_BRAKET', $stream);
 
         $this->parseSpaceIfExists($stream);
@@ -728,25 +728,25 @@ class Parser
         $this->matchNext('T_LEFT_SQUARE_BRAKET', $stream);
         $this->matchNext('T_LEFT_SQUARE_BRAKET', $stream);
 
-        $fullTableName = $key = $this->tomlArray->escapeKey($this->parseKeyName($stream));
+        $fullTableName = $key = $this->ZArray->escapeKey($this->parseKeyName($stream));
 
         while ($stream->isNext('T_DOT')) {
             $stream->moveNext();
 
-            $key = $this->tomlArray->escapeKey($this->parseKeyName($stream));
+            $key = $this->ZArray->escapeKey($this->parseKeyName($stream));
             $fullTableName .= ".$key";
         }
 
-        if (!$this->keyStore->isValidArrayTableKey($fullTableName)) {
+        if (!$this->ZStore->isValidArrayTableKey($fullTableName)) {
             $this->syntaxError("Ключ \"{$fullTableName}\" уже был определен ранее.");
         }
 
-        if ($this->keyStore->isTableImplicitFromArryTable($fullTableName)) {
+        if ($this->ZStore->isTableImplicitFromArryTable($fullTableName)) {
             $this->syntaxError("Массив таблиц \"{$fullTableName}\" уже был определен как предыдущая таблица");
         }
 
-        $this->keyStore->addArrayTableKey($fullTableName);
-        $this->tomlArray->addArrayTableKey($fullTableName);
+        $this->ZStore->addArrayTableKey($fullTableName);
+        $this->ZArray->addArrayTableKey($fullTableName);
 
         $this->matchNext('T_RIGHT_SQUARE_BRAKET', $stream);
         $this->matchNext('T_RIGHT_SQUARE_BRAKET', $stream);

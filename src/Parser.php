@@ -26,11 +26,19 @@ use ZCONF\Internal\ZStream;
 use ZCONF\Internal\ZToken;
 
 /**
- * Парсер для строк ZConfig
+ * Парсер конфигурации
  *
- * @method static array|null|stdClass parse(string $input, bool $resultAsObject = false) Преобразует ZCONF-строку в PHP массив
- * @method static array|null|stdClass parseString(string $input, bool $resultAsObject = false) Преобразует ZCONF-строку в PHP массив
- * @method static array|null|stdClass parseFile(string $input, bool $resultAsObject = false) Преобразует ZCONF-файл в PHP массив
+ *  Использование:
+ *  <code>
+ *  $configString = new Builder()
+ *   ->addTable('server.mail')
+ *   ->addValue('ip', '192.168.0.1', 'Внутренний IP')
+ *   ->addValue('port', 25)
+ *   ->getString();
+ *  </code>
+ *
+ * @method static array|null|stdClass parseString(string $input, bool $resultAsObject = false) Преобразует конфигурацию в PHP массив
+ * @method static array|null|stdClass parseFile(string $input, bool $resultAsObject = false) Преобразует файл конфигурации в PHP массив
  */
 class Parser
 {
@@ -62,61 +70,96 @@ class Parser
         $this->lexer = $lexer ?? new ZLexer();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function __callStatic($name, $arguments)
     {
-        if ($name == 'parse' || $name == 'parseString') {
-            try {
-                $parser = new self();
-                $data = $parser->parse(...$arguments);
-            } catch (SyntaxException $e) {
-                $exception = new ParseException($e->getMessage(), -1, null, null, $e);
-
-                if ($token = $e->getToken()) {
-                    $exception->setParsedLine($token->getLine());
-                }
-
-                throw $exception;
-            }
-
-            return $data;
-        } elseif ($name == 'parseFile') {
-            if (!is_file($arguments[0])) {
-                throw new ParseException(sprintf('Файл "%s" не существует.', $arguments[0]));
-            }
-
-            if (!is_readable($arguments[0])) {
-                throw new ParseException(sprintf('Файл "%s" не может быть прочитан.', $arguments[0]));
-            }
-
-            try {
-                $parser = new self();
-                $data = $parser->parse(file_get_contents($arguments[0]), $arguments[1] ?? false);
-            } catch (SyntaxException $e) {
-                $exception = new ParseException($e->getMessage());
-                $exception->setParsedFile($arguments[0]);
-
-                if ($token = $e->getToken()) {
-                    $exception->setParsedLine($token->getLine());
-                }
-
-                throw $exception;
-            }
-
-            return $data;
+        switch ($name) {
+            case 'parse':
+            case 'parseString':
+                return self::parseString(...$arguments);
+            case 'parseFile':
+                return self::parseFile(...$arguments);
+            default:
+                return null;
         }
-
-        return null;
     }
 
     /**
-     * Разбор ZCONF-строки
+     * Разбор строки конфигурации
      *
-     * @param string $input Входные данные (Строка ZCONF)
+     * @param string $input Входные данные (строка))
      * @param bool $resultAsObject (необязательно) Возвращает результат в виде объекта
      *
      * @return array|object Результат разбора
      *
-     * @throws ParseException|Exception Если ZCONF недействителен
+     * @throws ParseException|Exception Если конфигурация недействительна
+     */
+    public static function parseString(string $input, bool $resultAsObject = false)
+    {
+        try {
+            $parser = new self();
+            $data = $parser->parse($input, $resultAsObject);
+        } catch (SyntaxException $e) {
+            $exception = new ParseException($e->getMessage(), -1, null, null, $e);
+
+            if ($token = $e->getToken()) {
+                $exception->setParsedLine($token->getLine());
+            }
+
+            throw $exception;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Разбор файла конфигурации
+     *
+     * @param string $input Входные данные (файл)
+     * @param bool $resultAsObject (необязательно) Возвращает результат в виде объекта
+     *
+     * @return array|object Результат разбора
+     *
+     * @throws ParseException|Exception Если конфигурация недействительна
+     */
+    public static function parseFile(string $input, bool $resultAsObject = false)
+    {
+        if (!is_file($input)) {
+            throw new ParseException(sprintf('Файл "%s" не существует.', $input));
+        }
+
+        if (!is_readable($input)) {
+            throw new ParseException(sprintf('Файл "%s" не может быть прочитан.', $input));
+        }
+
+        try {
+            $parser = new self();
+            $data = $parser->parse(file_get_contents($input), $resultAsObject);
+        } catch (SyntaxException $e) {
+            $exception = new ParseException($e->getMessage());
+            $exception->setParsedFile($input);
+
+            if ($token = $e->getToken()) {
+                $exception->setParsedLine($token->getLine());
+            }
+
+            throw $exception;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Разбор конфигурации
+     *
+     * @param string $input Входные данные
+     * @param bool $resultAsObject (необязательно) Возвращает результат в виде объекта
+     *
+     * @return array|object Результат разбора
+     *
+     * @throws ParseException|Exception Если конфигурация недействительна
      */
     public function parse(string $input, bool $resultAsObject = false)
     {

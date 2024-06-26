@@ -123,7 +123,7 @@ $object = Parser::parseString('key = [1,2,3]', true);
             ->addValue('name', 'banana')
             ->addArrayOfTable('fruit.variety')
                 ->addValue('name', 'plantain')
-        ->getZCONFString();    // Сгенерировать строку ZCONF
+        ->getString();    // Сгенерировать строку ZCONF
 ```
 Результат:
 

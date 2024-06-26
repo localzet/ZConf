@@ -15,7 +15,7 @@
 namespace ZCONF\Internal;
 
 /**
- * Внутренний класс для управления токенами в ZConfig
+ * Внутренний класс для управления токенами
  * @internal
  */
 class ZToken

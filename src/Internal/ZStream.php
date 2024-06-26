@@ -17,7 +17,7 @@ namespace ZCONF\Internal;
 use ZCONF\Exception\SyntaxException;
 
 /**
- * Внутренний класс для управления стримами токенов в ZConfig
+ * Внутренний класс для управления стримами токенов
  * @internal
  */
 class ZStream

@@ -19,7 +19,7 @@ use function in_array;
 use function str_replace;
 
 /**
- * Внутренний класс для управления массивами в ZConfig
+ * Внутренний класс для управления массивами
  * @internal
  */
 class ZArray

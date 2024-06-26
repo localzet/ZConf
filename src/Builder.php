@@ -24,7 +24,7 @@ use function preg_replace;
 use function str_replace;
 
 /**
- * Генератор для строк ZConfig
+ * Генератор конфигурации
  *
  * Использование:
  * <code>
@@ -32,7 +32,7 @@ use function str_replace;
  *  ->addTable('server.mail')
  *  ->addValue('ip', '192.168.0.1', 'Внутренний IP')
  *  ->addValue('port', 25)
- *  ->getZCONFString();
+ *  ->getString();
  * </code>
  */
 class Builder
@@ -163,11 +163,11 @@ class Builder
     }
 
     /**
-     * Получает строку ZCONF
+     * Отдаёт конфигурацию в формате строки
      *
      * @return string
      */
-    public function getZCONFString(): string
+    public function getString(): string
     {
         return $this->output;
     }

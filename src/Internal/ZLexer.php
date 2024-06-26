@@ -18,7 +18,7 @@ use InvalidArgumentException;
 use ZCONF\Exception\SyntaxException;
 
 /**
- * Лексер для строк ZConfig.
+ * Внутренний класс для лексической обработки
  * @internal
  */
 class ZLexer

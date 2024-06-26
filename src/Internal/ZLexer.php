@@ -29,6 +29,7 @@ class ZLexer
     protected $activateEOSToken = true;
     protected $terminals = [
         '/^(=)/' => 'T_EQUAL',
+        '/^(null)/' => 'T_NULL',
         '/^(true|false)/' => 'T_BOOLEAN',
         '/^(\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{6})?(Z|-\d{2}:\d{2})?)?)/' => 'T_DATE_TIME',
 

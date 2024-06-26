@@ -280,7 +280,10 @@ class Parser
      */
     private function parseSimpleValue(ZStream $stream)
     {
-        if ($stream->isNext('T_BOOLEAN')) {
+        if ($stream->isNext('T_NULL')) {
+            $type = 'null';
+            $value = $this->parseNull($stream);
+        } elseif ($stream->isNext('T_BOOLEAN')) {
             $type = 'boolean';
             $value = $this->parseBoolean($stream);
         } elseif ($stream->isNext('T_INTEGER')) {
@@ -307,7 +310,7 @@ class Parser
         } else {
             $this->unexpectedTokenError(
                 $stream->moveNext(),
-                'Ожидался boolean, integer, long, string или datetime.'
+                'Ожидался null, boolean, integer, long, string или datetime.'
             );
         }
 
@@ -320,6 +323,18 @@ class Parser
         $valueStruct->type = $type;
 
         return $valueStruct;
+    }
+
+    /**
+     * Разбор null
+     *
+     * @param ZStream $stream Поток токенов
+     *
+     * @return null
+     */
+    private function parseNull(ZStream $stream)
+    {
+        return null;
     }
 
     /**

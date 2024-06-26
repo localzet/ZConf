@@ -72,7 +72,7 @@ class Builder
      * Добавляет пару ключ-значение
      *
      * @param string $key Имя ключа
-     * @param string|int|bool|float|array|Datetime $val Значение
+     * @param null|string|int|bool|float|array|Datetime $val Значение
      * @param string $comment Комментарий (необязательный аргумент).
      *
      * @return Builder Сам Builder
@@ -255,7 +255,7 @@ class Builder
     /**
      * Выгружает значение
      *
-     * @param string|int|bool|float|array|Datetime $val Значение
+     * @param null|string|int|bool|float|array|Datetime $val Значение
      *
      * @return string
      */
@@ -272,6 +272,8 @@ class Builder
                 return $this->dumpFloat($val);
             case is_bool($val):
                 return $this->dumpBool($val);
+            case is_null($val):
+                return 'null';
             case $val instanceof Datetime:
                 return $this->dumpDatetime($val);
             default:

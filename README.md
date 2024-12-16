@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.localzet.com" target="_blank">
-    <img src="https://cdn.localzet.com/assets/media/logos/ZorinProjectsSP.svg" width="400">
+  <img src="https://static.zorin.space/media/logos/ZorinProjectsSP.svg" width="400">
   </a>
 </p>
 
